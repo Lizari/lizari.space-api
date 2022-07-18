@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    tty: true
+    env_file:
+      - .env
+    ports:
+      - 3001:3001
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
