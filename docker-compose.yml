@@ -1,6 +1,42 @@
 version: '3'
 
 services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    env_file:
+      - .env
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment:
+      DEFAULT_HOST: '${DEFAULT_HOST}'
+      HTTPS_METHOD: noredirect
+    restart: always
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    env_file:
+      - .env
+    environment:
+      - DEFAULT_EMAIL=${DEFAULT_EMAIL}
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+
   db:
     image: postgres:latest
     container_name: db
@@ -24,6 +60,9 @@ services:
     tty: true
     env_file:
       - .env
+    environment:
+      VIRTUAL_HOST: '${DOMAIN}'
+      LETSENCRYPT_HOST: '${DOMAIN}'
     ports:
       - 3001:3001
     volumes:
@@ -31,3 +70,10 @@ services:
       - /app/node_modules
     depends_on:
       - db
+
+volumes:
+  conf:
+  certs:
+  vhost:
+  html:
+  acme:
