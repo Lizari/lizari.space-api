@@ -7,7 +7,13 @@ export class ArticleService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.ArticleCreateInput): Promise<Article> {
-    return this.prisma.article.create({ data });
+    return this.prisma.article.upsert({
+      where: {
+        title: data.title
+      },
+      update: {...data},
+      create: data,
+    });
   }
 
   async findAll(): Promise<Article[]> {

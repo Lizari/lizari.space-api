@@ -21,6 +21,8 @@ model Article {
   thumbnail   String
   tags        String[]
   content     String
+
+  @@unique([title])
 }
 
 model User {
