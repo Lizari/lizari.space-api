@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm i -g @nestjs/cli node-gyp
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 COPY . .
 
