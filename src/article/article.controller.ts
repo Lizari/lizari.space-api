@@ -28,7 +28,7 @@ export class ArticleController {
   }
 
   @Get(':title')
-  async findOne(@Param('tile') title: string): Promise<Article> {
+  async findOne(@Param('title') title: string): Promise<Article> {
     return this.articleService.findOne(title);
   }
 
