@@ -27,9 +27,9 @@ export class ArticleController {
     return this.articleService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Article> {
-    return this.articleService.findOne(+id);
+  @Get(':title')
+  async findOne(@Param('tile') title: string): Promise<Article> {
+    return this.articleService.findOne(title);
   }
 
   @UseGuards(BasicAuthGuard)

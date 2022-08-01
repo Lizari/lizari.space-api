@@ -20,9 +20,9 @@ export class ArticleService {
     return this.prisma.article.findMany();
   }
 
-  async findOne(id: number): Promise<Article> {
+  async findOne(title: string): Promise<Article> {
     return this.prisma.article.findUnique({
-      where: { id: id },
+      where: { title: title },
     });
   }
 

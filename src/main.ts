@@ -3,7 +3,6 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { truncate } from 'fs';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
